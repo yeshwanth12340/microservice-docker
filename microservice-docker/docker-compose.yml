@@ -1,0 +1,42 @@
+services:
+  web:
+    image: bcd55_web
+    build: ./web
+    ports:
+      - "8080:8081"
+    depends_on:
+      - db
+      - redis
+    networks:
+      - app_network
+
+  worker:
+    image: bcd55_worker
+    build: ./worker
+    depends_on:
+      - db
+      - redis
+    networks:
+      - app_network
+
+  db:
+    image: mongo:latest
+    container_name: bcd55_mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - db_data:/data/db
+    networks:
+      - app_network
+
+  redis:
+    image: redis
+    container_name: your-register-number_redis
+    networks:
+      - app_network
+
+networks:
+  app_network:
+
+volumes:
+  db_data:
